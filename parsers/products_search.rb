@@ -9,7 +9,7 @@ products = data['results'][0]['hits']
 
 
 # if ot's first page , generate pagination
-if current_page == 0 and number_of_pages>1
+if current_page == 0 and number_of_pages > 1
   nbr_products_pg1 = page_size
   step_page = 1
   while step_page < number_of_pages
@@ -17,7 +17,7 @@ if current_page == 0 and number_of_pages>1
         page_type: 'products_search',
         method: 'POST',
         url: page['url'],
-        body:page['vars']['post_params'].gsub(/page=0/,"page=#{step_page}"),
+        body: page['vars']['post_params'].gsub(/page=0/, "page=#{step_page}"),
         vars: {
             'input_type' => page['vars']['input_type'],
             'search_term' => page['vars']['search_term'],
@@ -30,7 +30,7 @@ if current_page == 0 and number_of_pages>1
 
 
   end
-elsif current_page == 0 and number_of_pages==1
+elsif current_page == 0 and number_of_pages == 1
   nbr_products_pg1 = page_size
 else
   nbr_products_pg1 = page['vars']['nbr_products_pg1']
@@ -39,11 +39,28 @@ end
 
 products.each_with_index do |product, i|
 
+  promotion = ""
+  price = product['price'].round(2) rescue ''
+  discount = product['discount'] rescue nil
+  unless discount.nil?
+    discount_type = discount['discountType']
+    if discount_type == 'PERCENT'
+      promotion = discount['discountInPercent'] + " % RABATT"
+    elsif discount_type == 'X_FOR_FIXED_PRICE'
+      promotion = "#{discount['afterNumberOfProducts']} FÖR #{discount['multibuyPrice']} KR"
+    elsif discount_type == 'FIXED_PRICE'
+      promotion = "SPARA #{(product['price'].to_f-discount['fixedPrice']).round(2)}KR "
+      price = discount['fixedPrice'].round(2) rescue ''
+    else
+      promotion = discount_type
+    end
+
+  end
   promotion = product['promotions'][0]['savings_text'] rescue ''
   availability = product['inStockQuantity'].to_i == 0 ? '' : '1'
   item_size_info = product['size']
 
-  price = product['price']
+  price = product['price'].round(2) rescue ''
 
   category = product['groupCategoryNamePath'][/([^\/]+?)\Z/]
 
@@ -129,8 +146,17 @@ products.each_with_index do |product, i|
   }
   product_details['_collection'] = 'products'
 
+  pages << {
+      page_type: 'products_reviews',
+      method: 'GET',
+      url: "https://www.mat.se/api/v1.2/product/#{product['id']}/review/list",
+      vars: {
+          'products' => products_details
+      }
 
-  outputs << product_details
+
+  }
+
 
 
 end
