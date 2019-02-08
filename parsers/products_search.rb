@@ -141,11 +141,7 @@ products.each_with_index do |product, i|
       SALES_PRICE: price,
       IS_AVAILABLE: availability,
       PROMOTION_TEXT: promotion,
-      EXTRACTED_ON: Time.now.to_s,
-
   }
-  product_details['_collection'] = 'products'
-
   pages << {
       page_type: 'products_reviews',
       method: 'GET',
