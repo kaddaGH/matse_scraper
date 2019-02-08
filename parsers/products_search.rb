@@ -139,7 +139,16 @@ products.each_with_index do |product, i|
       IS_AVAILABLE: availability,
       PROMOTION_TEXT: promotion,
   }
- 
+  pages << {
+      page_type: 'product_reviews',
+      method: 'GET',
+      url: "https://www.mat.se/api/v1.2/product/#{product['id']}/review/list?&searchkeyword=#{page['vars']['search_term']}&searchpage=#{page['vars']['page']}",
+      vars: {
+          'product_details' => product_details
+      }
+
+
+  }
 
 
 end
