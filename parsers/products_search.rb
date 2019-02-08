@@ -8,7 +8,7 @@ products = data['results'][0]['hits']
 
 # if ot's first page , generate pagination
 if current_page == 0 and number_of_pages > 1
-  nbr_products_pg1 = page_size
+  nbr_products_pg1 = products.length
   step_page = 1
   while step_page < number_of_pages
     pages << {
@@ -29,7 +29,7 @@ if current_page == 0 and number_of_pages > 1
 
   end
 elsif current_page == 0 and number_of_pages == 1
-  nbr_products_pg1 = page_size
+  nbr_products_pg1 = products.length
 else
   nbr_products_pg1 = page['vars']['nbr_products_pg1']
 end
@@ -141,7 +141,7 @@ products.each_with_index do |product, i|
       PROMOTION_TEXT: promotion,
   }
   pages << {
-      page_type: 'products_reviews',
+      page_type: 'product_reviews',
       method: 'GET',
       url: "https://www.mat.se/api/v1.2/product/#{product['id']}/review/list",
       vars: {
