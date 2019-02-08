@@ -1,5 +1,3 @@
-require 'cgi'
-
 data = JSON.parse(content)
 scrape_url_nbr_products = data['results'][0]['nbHits'].to_i
 current_page = data['results'][0]['page'].to_i
@@ -49,7 +47,7 @@ products.each_with_index do |product, i|
     elsif discount_type == 'X_FOR_FIXED_PRICE'
       promotion = "#{discount['afterNumberOfProducts']} FÖR #{discount['multibuyPrice']} KR"
     elsif discount_type == 'FIXED_PRICE'
-      promotion = "SPARA #{(product['price'].to_f-discount['fixedPrice']).round(2)}KR "
+      promotion = "SPARA #{(product['price'].to_f - discount['fixedPrice']).round(2)}KR "
       price = discount['fixedPrice'].round(2) rescue ''
     else
       promotion = discount_type
@@ -152,7 +150,6 @@ products.each_with_index do |product, i|
 
 
   }
-
 
 
 end
