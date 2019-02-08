@@ -151,7 +151,7 @@ products.each_with_index do |product, i|
       method: 'GET',
       url: "https://www.mat.se/api/v1.2/product/#{product['id']}/review/list",
       vars: {
-          'products' => products_details
+          'product_details' => product_details
       }
 
 
